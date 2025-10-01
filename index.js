@@ -1,9 +1,15 @@
 const path = require('path')
 const express = require('express')
 const chalk = require('chalk')
-const { addNote, getNotes, removeNote } = require('./notes.controller')
+const {
+  addNote,
+  getNotes,
+  removeNote,
+  changeNote,
+} = require('./notes.controller')
 
 const SEREVR_PORT = 3000
+const APP_TITLE = 'Express Application'
 
 const app = express()
 
@@ -16,21 +22,22 @@ app.use(
     extended: true,
   })
 )
+app.use(express.json())
 
 app.get('/', async (req, res) => {
   res.render('index', {
-    title: 'Express',
+    title: APP_TITLE,
     notes: await getNotes(),
-    created: false,
+    alert: false,
   })
 })
 
 app.post('/', async (req, res) => {
   await addNote(req.body.title)
   res.render('index', {
-    title: 'Express',
+    title: APP_TITLE,
     notes: await getNotes(),
-    created: true,
+    alert: 'Note cteate complete!',
   })
 })
 
@@ -38,45 +45,20 @@ app.delete('/:id', async (req, res) => {
   await removeNote(req.params.id)
   console.log(req.params.id, 'removed')
   res.render('index', {
-    title: 'Express',
+    title: APP_TITLE,
     notes: await getNotes(),
-    created: false,
+    alert: 'Note delete complete!',
   })
 })
 
-/** HTTP Example
-
-const server = http.createServer(async (req, res) => {
-  if (req.method === 'GET') {
-    const content = await fs.readFile(path.join(basePath, 'index.html'))
-    res.writeHead(200, {
-      'content-type': 'text/html',
-    })
-
-    res.end(content)
-  } else if (req.method === 'POST') {
-    const body = []
-
-    res.writeHead(200, {
-      'content-type': 'text/plain',
-    })
-
-    req.on('data', (data) => {
-      body.push(Buffer.from(data))
-    })
-
-    req.on('end', () => {
-      const title = body.toString().split('=')[1]
-      addNote(title)
-      res.end('Post success! Title=' + title)
-    })
-  }
+app.put('/:id', async (req, res) => {
+  await changeNote(req.params.id, req.body.title)
+  res.render('index', {
+    title: APP_TITLE,
+    notes: await getNotes(),
+    alert: 'Note change complete!',
+  })
 })
-  server.listen(SEREVR_PORT, () => {
-  console.log(chalk.blue('Server start...'))
-})
-
-*/
 
 app.listen(SEREVR_PORT, () => {
   console.log(chalk.blue('Server start on localhost:', SEREVR_PORT))
