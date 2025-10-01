@@ -1,42 +1,83 @@
-const yargs = require('yargs')
+const path = require('path')
+const express = require('express')
+const chalk = require('chalk')
 const { addNote, getNotes, removeNote } = require('./notes.controller')
 
-yargs
-  .command({
-    command: 'add',
-    describe: 'Add note with TITLE',
-    builder: {
-      title: {
-        type: 'string',
-        describe: 'Note title',
-        demandOption: true,
-      },
-    },
-    async handler({ title }) {
-      await addNote(title)
-    },
+const SEREVR_PORT = 3000
+
+const app = express()
+
+app.set('view engine', 'ejs')
+app.set('views', 'pages')
+
+app.use(express.static(path.resolve(__dirname, 'public')))
+app.use(
+  express.urlencoded({
+    extended: true,
   })
-  .command({
-    command: 'list',
-    describe: 'Print notes list',
-    async handler() {
-      const notes = await getNotes()
-      console.log('Here is the list of notes:')
-      console.table(notes, ['id', 'title'])
-    },
+)
+
+app.get('/', async (req, res) => {
+  res.render('index', {
+    title: 'Express',
+    notes: await getNotes(),
+    created: false,
   })
-  .command({
-    command: 'remove',
-    describe: 'Remove note by ID',
-    builder: {
-      id: {
-        type: 'string',
-        describe: 'Note ID',
-        demandOption: true,
-      },
-    },
-    async handler({ id }) {
-      await removeNote(id)
-    },
+})
+
+app.post('/', async (req, res) => {
+  await addNote(req.body.title)
+  res.render('index', {
+    title: 'Express',
+    notes: await getNotes(),
+    created: true,
   })
-  .parse()
+})
+
+app.delete('/:id', async (req, res) => {
+  await removeNote(req.params.id)
+  console.log(req.params.id, 'removed')
+  res.render('index', {
+    title: 'Express',
+    notes: await getNotes(),
+    created: false,
+  })
+})
+
+/** HTTP Example
+
+const server = http.createServer(async (req, res) => {
+  if (req.method === 'GET') {
+    const content = await fs.readFile(path.join(basePath, 'index.html'))
+    res.writeHead(200, {
+      'content-type': 'text/html',
+    })
+
+    res.end(content)
+  } else if (req.method === 'POST') {
+    const body = []
+
+    res.writeHead(200, {
+      'content-type': 'text/plain',
+    })
+
+    req.on('data', (data) => {
+      body.push(Buffer.from(data))
+    })
+
+    req.on('end', () => {
+      const title = body.toString().split('=')[1]
+      addNote(title)
+      res.end('Post success! Title=' + title)
+    })
+  }
+})
+  server.listen(SEREVR_PORT, () => {
+  console.log(chalk.blue('Server start...'))
+})
+
+*/
+
+app.listen(SEREVR_PORT, () => {
+  console.log(chalk.blue('Server start on localhost:', SEREVR_PORT))
+})

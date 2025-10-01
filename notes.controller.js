@@ -4,7 +4,7 @@ const path = require('path')
 const notesPath = path.join(__dirname, 'db.json')
 
 async function addNote(title) {
-  const notes = await getNotes() // Buffer.from(buffer).toString(('utf-8'))// require('./db.json')
+  const notes = await getNotes()
 
   const note = {
     title,

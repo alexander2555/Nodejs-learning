@@ -6,3 +6,9 @@
 2. Add base console commands (add, list)
 3. Add file storage (db.json) with read/write operations
 4. [task] Add Remove operation (remove)
+
+## Web-server
+
+1. Implement web-server with express package
+2. Add GET|POST|DELETE endpoints
+3. Add static front-end
