@@ -12,3 +12,4 @@
 1. Implement web-server with express package
 2. Add GET|POST|DELETE endpoints
 3. Add static front-end
+4. [Task] Add PUT endpoint (edit operation implement)
