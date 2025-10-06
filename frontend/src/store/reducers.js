@@ -1,7 +1,7 @@
 const initState = {
   questions: [],
   error: null,
-  isPending: false,
+  isPending: true,
 }
 
 export const questionsReducer = (state = initState, { type, payload }) => {

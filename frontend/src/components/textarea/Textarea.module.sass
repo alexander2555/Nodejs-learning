@@ -1,0 +1,21 @@
+.textarea
+  width: 20rem
+  max-width: 100%
+  padding: 1rem
+  margin: 1rem
+
+  color: var(--btn-color, var(--text-color, #000))
+  border: 1px solid var(--btn-color, var(--text-color, #000))
+  border-radius: .5rem
+
+  transition: color 0.3s, background-color 0.3s, border-color 0.3s
+
+  &:hover,
+  &:focus,
+  &:focus-visible
+    border-color: #646cff
+    outline: none
+
+  &:disabled
+    pointer-events: none
+    opacity: 0.5

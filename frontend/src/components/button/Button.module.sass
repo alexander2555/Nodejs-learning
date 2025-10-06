@@ -1,0 +1,37 @@
+.btn
+  display: inline-block
+  height: 42px
+  min-width: 20rem
+  padding: 0 1rem
+  margin: 1rem
+
+  color: var(--btn-color, var(--text-color, #000))
+  background: transparent
+  border: 1px solid var(--btn-color, var(--text-color, #000))
+  border-radius: .5rem
+  text-align: center
+  line-height: 42px
+
+  text-decoration: none
+
+  transition: color 0.3s, background-color 0.3s, border-color 0.3s
+
+  &:hover
+    border-color: #646cff
+
+  &:disabled
+    pointer-events: none
+    opacity: 0.5
+
+  &-icon
+    width: 42px
+    padding: 0
+    min-width: 42px
+
+
+@media (prefers-color-scheme: light)
+  .btn
+    &:hover
+      color: var(--bg-color, #000)
+      border-color: var(--bg-color, #000)
+      background-color: var(--btn-color, var(--text-color, #fff))

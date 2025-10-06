@@ -1,2 +1,28 @@
-.content
-  padding: 10px
+.question-row
+  display: flex
+  flex-wrap: nowrap
+  justify-content: space-between
+  align-items: center
+
+.question-input
+  width: 100%
+  flex: 1 1 100%
+
+.answers-list
+  flex: 1 1 100%
+  overflow-y: auto
+  // border-top: 1px solid #ccc
+
+  > ul
+    padding: 0
+    > li
+      list-style: none
+
+.answer
+  &-row
+    display: flex
+    align-items: flex-end
+  &-controls
+    display: flex
+    flex-direction: column
+    align-items: center

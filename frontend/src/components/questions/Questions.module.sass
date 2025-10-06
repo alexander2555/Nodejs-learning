@@ -1,2 +1,19 @@
-.content
-  padding: 10px
+.row
+  display: flex
+  flex-wrap: nowrap
+  align-items: flex-start
+  justify-content: space-between
+
+.item-content
+  flex: 0 1 100%
+  margin-top: 1rem
+  margin-left: 1rem
+  margin-right: auto
+  position: relative
+
+  &::after
+    display: block
+    content: 'Ответов ' attr(data-answers)
+    font-size: .75rem
+    opacity: .75
+

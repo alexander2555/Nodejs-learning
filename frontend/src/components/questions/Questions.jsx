@@ -1,64 +1,79 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   addQuestionAsync,
   fetchQuestionsAsync,
   delQuestionAsync,
 } from '../../store/actions'
-import { selectQuestions } from '../../store/selectors'
-import { FaRegTrashAlt } from 'react-icons/fa'
+import { selectIsPending, selectQuestions } from '../../store/selectors'
+import { Loading, Button } from '../../components'
+import { FaRegTrashAlt, FaPlus, FaEdit } from 'react-icons/fa'
 import styles from './Questions.module.sass'
 
 const Questions = () => {
   const dispatch = useDispatch()
-
+  // Селекторы
   const questions = useSelector(selectQuestions)
+  const isPending = useSelector(selectIsPending)
 
-  const [loading, setLoading] = useState(false)
-
-  const onQuestionDelete = (id) => {
+  // Обработчики кнопок
+  const questionDelete = (id) => {
     dispatch(delQuestionAsync(id))
   }
-
-  const onQuestionAdd = () => {
+  /** todo */
+  const questionAdd = () => {
     const q = {
-      content: 'Mock Question',
+      content: 'Новый вопрос',
       answers: [],
     }
     dispatch(addQuestionAsync(q))
   }
 
+  // Загрузка вопросов с сервера
   useEffect(() => {
     dispatch(fetchQuestionsAsync())
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  if (loading) {
-    return <div>Loading...</div>
+  if (isPending) {
+    return <Loading />
   }
 
   return (
-    <div>
-      <h2>Questions list</h2>
-      <button onClick={onQuestionAdd} title="Add new question">
-        +
-      </button>
-      {questions.map(({ _id, content, answers }) => (
-        <div key={_id}>
-          <h3>Question:</h3>
-          {content}
-          <br />
-          <span>answers:</span>
-          <ul>
-            {answers.map((a) => (
-              <li>{a}</li>
-            ))}
-          </ul>
-          <button onClick={() => onQuestionDelete(_id)}>
-            <FaRegTrashAlt />
-          </button>
-        </div>
-      ))}
-    </div>
+    <>
+      <h2>Список вопросов</h2>
+      <Button onClick={questionAdd} icon={true} title="Добавить вопрос">
+        <FaPlus />
+      </Button>
+      <ol>
+        {questions.map(({ _id, content, answers }) => (
+          <li key={_id}>
+            <div className={styles.row}>
+              <div
+                className={styles['item-content']}
+                data-answers={answers.length}
+              >
+                {content}
+              </div>
+              <Button
+                to={'/question/' + _id}
+                icon={true}
+                title="Редактировать вопрос"
+              >
+                <FaEdit />
+              </Button>
+              <Button
+                onClick={() => questionDelete(_id)}
+                icon={true}
+                title="Удалить вопрос"
+              >
+                <FaRegTrashAlt />
+              </Button>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </>
   )
 }
 

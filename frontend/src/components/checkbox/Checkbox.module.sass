@@ -1,0 +1,35 @@
+.checkbox
+  display: inline-block
+  line-height: 1
+  color: var(--btn-color, var(--text-color, #000))
+
+  cursor: pointer
+
+  transition: color 0.3s
+
+  &:hover,
+  &:focus,
+  &:focus-visible
+    color: #646cff
+    outline: none
+
+  &:disabled
+    pointer-events: none
+    opacity: 0.5
+
+  &-icon
+    display: inline-block
+    transform: scale(1.2)
+
+  > input
+    position: absolute
+    display: none
+    appearance: none
+    visibility: hidden
+
+// @media (prefers-color-scheme: light)
+//   .btn
+//     &:hover
+//       color: var(--bg-color, #000)
+//       border-color: var(--bg-color, #000)
+//       background-color: var(--btn-color, var(--text-color, #fff))

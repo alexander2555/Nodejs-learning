@@ -1,0 +1,31 @@
+.input
+  display: inline-block
+  height: 42px
+  min-width: 20rem
+  padding: 0 1rem
+  margin: 1rem
+  vertical-align: middle
+
+  color: var(--btn-color, var(--text-color, #000))
+  border: 1px solid var(--btn-color, var(--text-color, #000))
+  border-radius: .5rem
+  line-height: 42px
+
+  transition: color 0.3s, background-color 0.3s, border-color 0.3s
+
+  &:hover,
+  &:focus,
+  &:focus-visible
+    border-color: #646cff
+    outline: none
+
+  &:disabled
+    pointer-events: none
+    opacity: 0.5
+
+// @media (prefers-color-scheme: light)
+//   .btn
+//     &:hover
+//       color: var(--bg-color, #000)
+//       border-color: var(--bg-color, #000)
+//       background-color: var(--btn-color, var(--text-color, #fff))

@@ -10,6 +10,7 @@ const {
   removeQ,
   changeQ,
 } = require('./questions.controller')
+const { getAnswers } = require('./answers.controller')
 
 const SEREVR_PORT = 3000
 const CLIENT_PORT = 5173
@@ -35,20 +36,24 @@ app.use(express.json())
 app.get('/questions', async (req, res) => {
   try {
     const quis = await getQuis()
-    console.log('Get request done!')
     res.send(quis)
+    console.log('[GET] All questions sent!')
   } catch (err) {
-    console.warn('GET operation error!')
+    console.warn('[GET] request error!')
   }
 })
 
 app.get('/questions/:id', async (req, res) => {
   try {
-    const q = await getQ(req.params.id)
-    console.log('Get request done!')
+    const qId = req.params.id
+    const q = await getQ(qId)
+    q.answers = await getAnswers(q.answers)
     res.send(q)
+    console.log(
+      `[GET] question ${q._id} with ${q.answers.length} answer(s) sent!`
+    )
   } catch (err) {
-    console.warn('GET operation error!')
+    console.warn('[GET] Q request error!')
   }
 })
 
@@ -58,7 +63,7 @@ app.post('/questions', async (req, res) => {
     res.send(newQ)
     console.log(newQ.id, 'added')
   } catch (err) {
-    console.warn('ADD operation error!')
+    console.warn('[ADD] request error!')
   }
 })
 

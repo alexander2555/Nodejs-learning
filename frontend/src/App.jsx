@@ -1,12 +1,14 @@
-import { Route, Routes, useNavigate } from 'react-router-dom'
 import { lazy, Suspense } from 'react'
-import { createAppStore } from './store/createStore'
 import { Provider } from 'react-redux'
+import { createAppStore } from './store/createStore'
+import { Link, Route, Routes, useNavigate } from 'react-router-dom'
+import { Loading } from './components'
 import styles from './App.module.sass'
 
 const Quiz = lazy(() => import('./components/quiz/Quiz'))
 const Questions = lazy(() => import('./components/questions/Questions'))
 const Question = lazy(() => import('./components/question/Question'))
+const MainPage = lazy(() => import('./components/main-page/MainPage'))
 
 export const App = () => {
   const nav = useNavigate()
@@ -15,13 +17,17 @@ export const App = () => {
   return (
     <Provider store={store}>
       <header className={styles.header}>
-        <h1>Quiz Application</h1>
+        <h1>
+          <Link to="/" className="link" title="Главная">
+            Quiz Application
+          </Link>
+        </h1>
       </header>
       <main className={styles.content}>
         <Routes>
           <Route
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loading />}>
                 <Quiz />
               </Suspense>
             }
@@ -29,15 +35,23 @@ export const App = () => {
           />
           <Route
             element={
-              <Suspense fallback={<div>Loading...</div>}>
-                <Questions />
+              <Suspense fallback={<Loading />}>
+                <MainPage />
               </Suspense>
             }
             path="/"
           />
           <Route
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loading />}>
+                <Questions />
+              </Suspense>
+            }
+            path="/questions"
+          />
+          <Route
+            element={
+              <Suspense fallback={<Loading />}>
                 <Question />
               </Suspense>
             }

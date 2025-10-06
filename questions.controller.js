@@ -9,7 +9,7 @@ async function getQuis() {
 }
 
 async function getQ(id) {
-  return await Question.find({ _id: id })
+  return await Question.findById(id)
 }
 
 async function removeQ(id) {
