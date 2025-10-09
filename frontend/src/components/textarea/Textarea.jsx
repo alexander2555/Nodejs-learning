@@ -1,9 +1,9 @@
 import styles from './Textarea.module.sass'
 
-export const Textarea = ({ className, ...props }) => {
+export const Textarea = ({ tag, ...props }) => {
   return (
     <textarea
-      className={styles.textarea + (className ? ' ' + className : '')}
+      className={styles.textarea + (tag ? ' ' + styles.tag : '')}
       {...props}
     ></textarea>
   )

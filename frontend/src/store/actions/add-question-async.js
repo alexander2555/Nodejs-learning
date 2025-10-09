@@ -1,11 +1,11 @@
 import { apiPost } from '../../api'
 
 export const addQuestionAsync =
-  (payload) =>
+  (questionData) =>
   async (dispatch, getState, { navigate }) => {
     dispatch({ type: 'SET_PENDING' })
     try {
-      const resp = await apiPost(payload)
+      const resp = await apiPost(questionData)
       const newQuestion = await resp.json()
 
       dispatch({ type: 'ADD_Q', payload: newQuestion })

@@ -10,6 +10,11 @@ import { Loading, Button } from '../../components'
 import { FaRegTrashAlt, FaPlus, FaEdit } from 'react-icons/fa'
 import styles from './Questions.module.sass'
 
+const initQ = {
+  content: 'Новый вопрос',
+  answers: [],
+}
+
 const Questions = () => {
   const dispatch = useDispatch()
   // Селекторы
@@ -20,13 +25,8 @@ const Questions = () => {
   const questionDelete = (id) => {
     dispatch(delQuestionAsync(id))
   }
-  /** todo */
   const questionAdd = () => {
-    const q = {
-      content: 'Новый вопрос',
-      answers: [],
-    }
-    dispatch(addQuestionAsync(q))
+    dispatch(addQuestionAsync(initQ))
   }
 
   // Загрузка вопросов с сервера
@@ -35,9 +35,7 @@ const Questions = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  if (isPending) {
-    return <Loading />
-  }
+  if (isPending) return <Loading />
 
   return (
     <>

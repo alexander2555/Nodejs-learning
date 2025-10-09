@@ -4,7 +4,7 @@ const QSchema = mongoose.Schema(
   {
     content: {
       type: String,
-      required: true,
+      required: false,
     },
     answers: {
       type: Array,

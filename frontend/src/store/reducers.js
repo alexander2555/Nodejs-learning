@@ -21,9 +21,7 @@ export const questionsReducer = (state = initState, { type, payload }) => {
     case 'UPD_Q':
       return {
         ...state,
-        posts: state.questions.map((q) =>
-          q._id === payload._id ? payload : q
-        ),
+        questions: [...state.questions, payload],
         isPending: false,
       }
     case 'SET_PENDING':

@@ -16,8 +16,8 @@ async function removeQ(id) {
   await Question.deleteOne({ _id: id })
 }
 
-async function changeQ({ id, content, answers = [] }) {
-  await Question.updateOne({ _id: id }, { content, answers })
+async function changeQ({ id, content, answers }) {
+  await Question.updateOne({ _id: id }, { $set: { content, answers } })
 }
 
 module.exports = {

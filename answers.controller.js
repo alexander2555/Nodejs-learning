@@ -20,8 +20,8 @@ async function removeA(id) {
   await Answer.deleteOne({ _id: id })
 }
 
-async function changeA({ id, content, isCorrect = false }) {
-  await Answer.updateOne({ _id: id }, { content, isCorrect })
+async function changeA(id, content, isCorrect) {
+  await Answer.updateOne({ _id: id }, { $set: { content, isCorrect } })
 }
 
 module.exports = {

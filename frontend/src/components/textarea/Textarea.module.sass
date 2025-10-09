@@ -1,9 +1,10 @@
 .textarea
-  width: 20rem
+  width: 42rem
   max-width: 100%
   padding: 1rem
   margin: 1rem
 
+  appearance: none
   color: var(--btn-color, var(--text-color, #000))
   border: 1px solid var(--btn-color, var(--text-color, #000))
   border-radius: .5rem
@@ -19,3 +20,12 @@
   &:disabled
     pointer-events: none
     opacity: 0.5
+
+  &::-webkit-scrollbar
+      display: none
+  & 
+    scrollbar-width: none
+    -ms-overflow-style: none
+
+  &.tag
+    border-color: lightgreen

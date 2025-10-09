@@ -10,10 +10,11 @@ const {
   removeQ,
   changeQ,
 } = require('./questions.controller')
-const { getAnswers } = require('./answers.controller')
+const { getAnswers, addA, changeA, removeA } = require('./answers.controller')
 
 const SEREVR_PORT = 3000
 const CLIENT_PORT = 5173
+const ENDPOINT = '/questions'
 const DB_CONNECT =
   'mongodb+srv://alexander7555_db_user:mqXni6f3FbfwYCZn@cluster0.mgwe7yy.mongodb.net/Quiz?retryWrites=true&w=majority&appName=Cluster0'
 
@@ -33,7 +34,7 @@ app.use(
 )
 app.use(express.json())
 
-app.get('/questions', async (req, res) => {
+app.get(ENDPOINT, async (req, res) => {
   try {
     const quis = await getQuis()
     res.send(quis)
@@ -43,7 +44,7 @@ app.get('/questions', async (req, res) => {
   }
 })
 
-app.get('/questions/:id', async (req, res) => {
+app.get(ENDPOINT + '/:id', async (req, res) => {
   try {
     const qId = req.params.id
     const q = await getQ(qId)
@@ -57,25 +58,79 @@ app.get('/questions/:id', async (req, res) => {
   }
 })
 
-app.post('/questions', async (req, res) => {
+app.post(ENDPOINT, async (req, res) => {
   try {
     const newQ = await addQ(req.body)
+
     res.send(newQ)
-    console.log(newQ.id, 'added')
+
+    console.log(`[ADD] New question ${newQ.id} added`)
   } catch (err) {
     console.warn('[ADD] request error!')
   }
 })
 
-app.delete('/questions/:id', async (req, res) => {
-  await removeQ(req.params.id)
-  res.send()
-  console.log(req.params.id, 'removed')
+app.delete(ENDPOINT + '/:id', async (req, res) => {
+  try {
+    const qId = req.params.id
+    const q = await getQ(qId)
+    // Удаление ответов
+    await Promise.all(q.answers.map((a) => removeA(a)))
+    // Удаление вопроса
+    await removeQ(qId)
+
+    res.send()
+
+    console.log(
+      `[DEL] Question ${qId} with ${q.answers.length} answers removed`
+    )
+  } catch (err) {
+    console.warn('[DEL] request error!')
+  }
 })
 
-app.put('/questions/:id', async (req, res) => {
-  await changeQ(req.params.id, req.body)
-  console.log(req.params.id, 'changed')
+app.put(ENDPOINT + '/:id', async (req, res) => {
+  try {
+    const qId = req.params.id
+    const newQ = req.body
+    const oldQ = await getQ(qId)
+    const oldAnswersIds = oldQ.answers
+    const newAnswers = newQ.answers
+    const updAnswersIds = []
+    // Добавление новых ответов в коллекцию Answers и получение их id
+    const addedAnswers = newQ.answers.filter((a) => a.isNew)
+    const addedAnswersIds = (
+      await addA(
+        addedAnswers.map((a) => ({
+          content: a.content,
+          isCorrect: a.isCorrect,
+        }))
+      )
+    ).map((a) => a.id)
+    // Обновление существующих ответов
+    await Promise.all(
+      oldAnswersIds.map((aId) => {
+        const newAnswer = newAnswers.find((a) => a._id === aId)
+        if (newAnswer) updAnswersIds.push(aId)
+        return newAnswer
+          ? changeA(aId, newAnswer.content, newAnswer.isCorrect)
+          : removeA(aId)
+      })
+    )
+    // Обновление вопроса в БД
+    const updatedQ = {
+      ...req.body,
+      id: qId,
+      answers: [...updAnswersIds, ...addedAnswersIds],
+    }
+    await changeQ(updatedQ)
+
+    res.send(updatedQ)
+
+    console.log(`[PUT] Question ${qId} changed`)
+  } catch (err) {
+    console.warn('[PUT] request error!')
+  }
 })
 
 mongoose

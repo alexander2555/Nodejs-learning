@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchQuestionsAsync } from '../../store/actions'
+import { fetchQuestionsAsync, updQuestionAsync } from '../../store/actions'
 import { selectQuestions, selectIsPending } from '../../store/selectors'
 import {
   Loading,
@@ -11,15 +11,19 @@ import {
   Controls,
   Checkbox,
 } from '../../components'
+import { getUniqId } from '../../utils'
 import { FaChevronLeft, FaEraser, FaPlus, FaRegTrashAlt } from 'react-icons/fa'
 import styles from './Question.module.sass'
 
 const Question = () => {
-  const inputRef = useRef()
   const dispatch = useDispatch()
+
+  // Реф для установки фокуса
+  const inputRef = useRef()
+
   // Селекторы
   const isPending = useSelector(selectIsPending)
-  const question = useSelector(selectQuestions)
+  const questions = useSelector(selectQuestions)
 
   const id = useParams().id
 
@@ -28,7 +32,7 @@ const Question = () => {
   const [questionInputValue, setQuestionInputValue] = useState('')
   const [answers, setAnswers] = useState([])
 
-  // Обработчики кнопок
+  /// Обработчики кнопок
   const clearContent = () => {
     setQuestionInputValue('')
     inputRef.current.focus()
@@ -41,6 +45,21 @@ const Question = () => {
     setAnswers(answers.map((a) => (a._id === id ? { ...a, ...data } : a)))
     setChanged(true)
   }
+  const addAnswer = () => {
+    setAnswers([
+      { _id: getUniqId(), content: '', isCorrect: false, isNew: true },
+      ...answers,
+    ])
+  }
+  const delAnswer = (id) => {
+    setAnswers(answers.filter((a) => a._id !== id))
+    setChanged(true)
+  }
+  // Сохранение вопроса на сервере
+  const updateQuestion = () => {
+    dispatch(updQuestionAsync({ id, content: questionInputValue, answers }))
+    setChanged(false)
+  }
 
   // Получение данных вопроса с сервера
   useEffect(() => {
@@ -50,13 +69,13 @@ const Question = () => {
 
   // Ввод данных в локальное состояние, рендер
   useEffect(() => {
+    const question = questions.find((q) => q._id === id)
     setQuestionInputValue(question?.content || '')
     setAnswers(question?.answers || [])
-  }, [question])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [questions])
 
-  if (isPending) {
-    return <Loading />
-  }
+  if (isPending) return <Loading />
 
   return (
     <>
@@ -75,16 +94,17 @@ const Question = () => {
           <FaEraser />
         </Button>
       </div>
+
       <h3>Ответы</h3>
       <hr />
-      <Button onClick={() => {}} icon={true} title="Добавить ответ">
+      <Button onClick={addAnswer} icon={true} title="Добавить ответ">
         <FaPlus />
       </Button>
       {answers.length ? (
         <>
           <div className={styles['answers-list']}>
             <ul>
-              {answers.map(({ _id, content, isCorrect }) => (
+              {answers.map(({ _id, content, isCorrect, isNew }) => (
                 <li
                   key={_id}
                   className={styles['answer-row']}
@@ -97,6 +117,7 @@ const Question = () => {
                       changeAnswer(_id, { content: target.value })
                     }
                     name="answer-content"
+                    tag={isNew ? 'new' : ''}
                   ></Textarea>
                   <div className={styles['answer-controls']}>
                     <Checkbox
@@ -104,10 +125,11 @@ const Question = () => {
                       onChange={() =>
                         changeAnswer(_id, { isCorrect: !isCorrect })
                       }
+                      title="Корректность ответа"
                       name="answer-correct"
                     />
                     <Button
-                      onClick={() => {}}
+                      onClick={() => delAnswer(_id)}
                       icon={true}
                       title="Удалить ответ"
                     >
@@ -122,14 +144,17 @@ const Question = () => {
       ) : (
         <span>Список ответов пуст</span>
       )}
+
       <Controls bottom={true}>
         <Button navigate={-1} icon={true} title="Назад">
           <FaChevronLeft />
         </Button>
         <Button
-          onClick={() => {}}
+          onClick={updateQuestion}
           title="Сохранить вопрос"
-          disabled={!changed || !questionInputValue}
+          disabled={
+            !changed || !questionInputValue || answers.some((a) => !a.content)
+          }
         >
           Сохранить
         </Button>

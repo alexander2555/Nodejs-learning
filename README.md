@@ -21,6 +21,6 @@
 
 ---
 
-<p align="right"><b>branch</b>&nbsp;<u>Task-5-1-Quiz branch</u></p>
+<p align="right"><b>branch</b>&nbsp;<u>Task-5-1-Quiz</u></p>
 
 ## _Quiz Application_

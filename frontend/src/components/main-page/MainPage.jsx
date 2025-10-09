@@ -14,12 +14,11 @@ const MainPage = () => {
 
   return (
     <>
-      <h2>Main Page</h2>
       <Controls>
         <Button to="/quiz">Запустить тест</Button>
         <Button to="/questions">Редактировать тест</Button>
       </Controls>
-      <h3>History</h3>
+      <h3>История тестирования</h3>
       {testHistory.length ? (
         <>
           {testHistory.map(({ id, result }) => (
@@ -28,7 +27,7 @@ const MainPage = () => {
           <Button onClick={resetTestHistory}>Очистить историю</Button>
         </>
       ) : (
-        <span>test history is empty</span>
+        <span>Test history is empty</span>
       )}
     </>
   )
