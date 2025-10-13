@@ -1,0 +1,37 @@
+.radio
+  position: relative
+  display: inline-block
+  margin-bottom: 1rem
+  line-height: 1
+  color: var(--btn-color, var(--text-color, #000))
+
+  cursor: pointer
+
+  transition: color 0.3s
+
+  &:hover,
+  &:focus,
+  &:focus-visible
+    color: #646cff
+    outline: none
+
+  &:disabled
+    pointer-events: none
+    opacity: 0.5
+
+  &-icon
+    display: inline-block
+    left: 0
+    vertical-align: middle
+    transform: scale(1.2)
+
+  &-option
+    position: relative
+    top: 0
+    left: 1rem
+
+  > input
+    position: absolute
+    display: none
+    appearance: none
+    visibility: hidden
