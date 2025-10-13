@@ -1,16 +1,18 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button, Controls } from '../../components'
-import { getLocalHistory, setLocalHistory } from '../../utils'
-
-const initTestHistory = getLocalHistory()
+import { getLocalHistory } from '../../utils'
 
 const MainPage = () => {
-  const [testHistory, setTestHistory] = useState(initTestHistory)
+  const [testHistory, setTestHistory] = useState({})
 
   const resetTestHistory = () => {
-    setTestHistory([])
-    setLocalHistory()
+    localStorage.removeItem('testHistory')
+    setTestHistory({})
   }
+
+  useEffect(() => {
+    setTestHistory(getLocalHistory())
+  }, [])
 
   return (
     <>
@@ -19,11 +21,19 @@ const MainPage = () => {
         <Button to="/questions">Редактировать тест</Button>
       </Controls>
       <h3>История тестирования</h3>
-      {testHistory.length ? (
+      {Object.keys(testHistory).length ? (
         <>
-          {testHistory.map(({ id, result }) => (
-            <div key={id}>{result}</div>
-          ))}
+          <ul>
+            {Object.entries(testHistory).map(([id, result]) => (
+              <li key={id}>
+                {new Date(Number(id)).toLocaleString()} Верно&nbsp;
+                {result.reduce((correct, answer) => {
+                  return Object.values(answer)[0] ? ++correct : correct
+                }, 0)}
+                &nbsp;из {result.length}
+              </li>
+            ))}
+          </ul>
           <Button onClick={resetTestHistory}>Очистить историю</Button>
         </>
       ) : (

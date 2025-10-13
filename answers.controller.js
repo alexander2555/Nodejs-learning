@@ -5,10 +5,6 @@ async function addA(newA) {
 }
 
 async function getAnswers(ids = []) {
-  // const queryA = Array.isArray(ids) && ids.length ? { _id: { $in: ids } } : null
-
-  // console.log('[Answer controller] qeury:', { _id: { $in: ids } })
-
   return await Answer.find({ _id: { $in: ids } })
 }
 

@@ -6,22 +6,24 @@ const initState = {
 
 export const questionsReducer = (state = initState, { type, payload }) => {
   switch (type) {
-    case 'DEL_Q':
-      return {
-        ...state,
-        questions: state.questions.filter((q) => q._id !== payload),
-        isPending: false,
-      }
     case 'ADD_Q':
       return {
         ...state,
         questions: [...state.questions, payload],
         isPending: false,
       }
+    case 'DEL_Q':
+      return {
+        ...state,
+        questions: state.questions.filter((q) => q.id !== payload),
+        isPending: false,
+      }
     case 'UPD_Q':
       return {
         ...state,
-        questions: [...state.questions, payload],
+        questions: state.questions.map((q) =>
+          q.id === payload.id ? payload : q
+        ),
         isPending: false,
       }
     case 'SET_PENDING':

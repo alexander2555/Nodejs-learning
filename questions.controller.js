@@ -4,7 +4,7 @@ async function addQ(newQ) {
   return await Question.create(newQ)
 }
 
-async function getQuis() {
+async function getQuestions() {
   return await Question.find()
 }
 
@@ -23,7 +23,7 @@ async function changeQ({ id, content, answers }) {
 module.exports = {
   addQ,
   getQ,
-  getQuis,
+  getQuestions,
   removeQ,
   changeQ,
 }
