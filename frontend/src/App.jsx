@@ -9,6 +9,7 @@ const Quiz = lazy(() => import('./components/quiz/Quiz'))
 const Questions = lazy(() => import('./components/questions/Questions'))
 const Question = lazy(() => import('./components/question/Question'))
 const MainPage = lazy(() => import('./components/main-page/MainPage'))
+const Result = lazy(() => import('./components/result/Result'))
 
 export const App = () => {
   const nav = useNavigate()
@@ -56,6 +57,14 @@ export const App = () => {
               </Suspense>
             }
             path="/question/:id"
+          />
+          <Route
+            element={
+              <Suspense fallback={<Loading />}>
+                <Result />
+              </Suspense>
+            }
+            path="/result"
           />
         </Routes>
       </main>

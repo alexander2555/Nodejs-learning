@@ -7,10 +7,10 @@ export const addQuestionAsync =
     try {
       const resp = await apiPost(questionData)
       const newQuestion = await resp.json()
-
+      // Добавление созданного вопроса в стор
       dispatch({ type: 'ADD_Q', payload: newQuestion })
-
-      navigate(`/question/${newQuestion._id}`)
+      // Редирект на него по его id
+      navigate(`/question/${newQuestion.id}`)
     } catch (e) {
       dispatch({ type: 'SET_ERROR', payload: e.message })
     }

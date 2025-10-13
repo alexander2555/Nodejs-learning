@@ -1,13 +1,17 @@
 import styles from './Checkbox.module.sass'
 import { FaRegCheckCircle, FaRegCircle } from 'react-icons/fa'
 
-export const Checkbox = ({ title, ...props }) => {
+export const Checkbox = ({ className, children, title, ...props }) => {
   return (
-    <label className={styles['checkbox']} title={title}>
+    <label
+      className={styles['checkbox'] + (className ? ' ' + className : '')}
+      title={title}
+    >
       <input type="checkbox" className={styles.checkboxInput} {...props} />
       <span className={styles['checkbox-icon']}>
         {props.checked ? <FaRegCheckCircle /> : <FaRegCircle />}
       </span>
+      {children}
     </label>
   )
 }

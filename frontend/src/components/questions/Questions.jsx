@@ -44,8 +44,8 @@ const Questions = () => {
         <FaPlus />
       </Button>
       <ol>
-        {questions.map(({ _id, content, answers }) => (
-          <li key={_id}>
+        {questions.map(({ id, content, answers }) => (
+          <li key={id}>
             <div className={styles.row}>
               <div
                 className={styles['item-content']}
@@ -54,14 +54,14 @@ const Questions = () => {
                 {content}
               </div>
               <Button
-                to={'/question/' + _id}
+                to={'/question/' + id}
                 icon={true}
                 title="Редактировать вопрос"
               >
                 <FaEdit />
               </Button>
               <Button
-                onClick={() => questionDelete(_id)}
+                onClick={() => questionDelete(id)}
                 icon={true}
                 title="Удалить вопрос"
               >

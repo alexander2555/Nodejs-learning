@@ -32,7 +32,7 @@ const Question = () => {
   const [questionInputValue, setQuestionInputValue] = useState('')
   const [answers, setAnswers] = useState([])
 
-  /// Обработчики кнопок
+  /// Обработчики UI
   const clearContent = () => {
     setQuestionInputValue('')
     inputRef.current.focus()
@@ -42,17 +42,17 @@ const Question = () => {
     setChanged(true)
   }
   const changeAnswer = (id, data) => {
-    setAnswers(answers.map((a) => (a._id === id ? { ...a, ...data } : a)))
+    setAnswers(answers.map((a) => (a.id === id ? { ...a, ...data } : a)))
     setChanged(true)
   }
   const addAnswer = () => {
     setAnswers([
-      { _id: getUniqId(), content: '', isCorrect: false, isNew: true },
+      { id: getUniqId(), content: '', isCorrect: false, isNew: true },
       ...answers,
     ])
   }
   const delAnswer = (id) => {
-    setAnswers(answers.filter((a) => a._id !== id))
+    setAnswers(answers.filter((a) => a.id !== id))
     setChanged(true)
   }
   // Сохранение вопроса на сервере
@@ -69,7 +69,7 @@ const Question = () => {
 
   // Ввод данных в локальное состояние, рендер
   useEffect(() => {
-    const question = questions.find((q) => q._id === id)
+    const question = questions.find((q) => q.id === id)
     setQuestionInputValue(question?.content || '')
     setAnswers(question?.answers || [])
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -104,9 +104,9 @@ const Question = () => {
         <>
           <div className={styles['answers-list']}>
             <ul>
-              {answers.map(({ _id, content, isCorrect, isNew }) => (
+              {answers.map(({ id, content, isCorrect, isNew }) => (
                 <li
-                  key={_id}
+                  key={id}
                   className={styles['answer-row']}
                   data-correct={isCorrect}
                 >
@@ -114,7 +114,7 @@ const Question = () => {
                     rows={3}
                     value={content}
                     onChange={({ target }) =>
-                      changeAnswer(_id, { content: target.value })
+                      changeAnswer(id, { content: target.value })
                     }
                     name="answer-content"
                     tag={isNew ? 'new' : ''}
@@ -123,13 +123,13 @@ const Question = () => {
                     <Checkbox
                       checked={isCorrect}
                       onChange={() =>
-                        changeAnswer(_id, { isCorrect: !isCorrect })
+                        changeAnswer(id, { isCorrect: !isCorrect })
                       }
                       title="Корректность ответа"
                       name="answer-correct"
                     />
                     <Button
-                      onClick={() => delAnswer(_id)}
+                      onClick={() => delAnswer(id)}
                       icon={true}
                       title="Удалить ответ"
                     >
@@ -153,7 +153,11 @@ const Question = () => {
           onClick={updateQuestion}
           title="Сохранить вопрос"
           disabled={
-            !changed || !questionInputValue || answers.some((a) => !a.content)
+            !changed ||
+            !questionInputValue ||
+            answers.some((a) => !a.content) ||
+            answers.every((a) => !a.isCorrect) ||
+            answers.length < 2
           }
         >
           Сохранить
