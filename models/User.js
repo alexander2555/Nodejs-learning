@@ -8,7 +8,7 @@ const UserSchema = mongoose.Schema({
     unique: true,
     validate: {
       validator: validator.isEmail,
-      error: 'email is not uniq',
+      message: 'Email is invalid!',
     },
   },
   password: {

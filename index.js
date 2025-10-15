@@ -10,6 +10,7 @@ const {
   changeNote,
 } = require('./notes.controller')
 const { addUser, loginUser } = require('./user.controller')
+const { getRecords, addRecord } = require('./records.controller')
 const auth = require('./middleware/auth')
 
 const SEREVR_PORT = 3000
@@ -82,51 +83,42 @@ app.get('/logout', (req, res) => {
   res.redirect('/login')
 })
 
+/** [Task] 6.1. Record Form */
+const APP_RECORD_TITLE = 'Запись'
+// Контроллеры формы записи к врачу (заявки)
 app.get('/', async (req, res) => {
-  res.render('index', {
-    title: APP_TITLE,
-    notes: await getNotes(),
-    alert: false,
+  res.render('record', {
+    title: APP_RECORD_TITLE,
+    records: await getRecords(),
+    success: undefined,
+    error: undefined,
   })
 })
-
 app.post('/', async (req, res) => {
   try {
-    await addNote(req.body.title, req.user.email)
-    res.render('index', {
-      title: APP_TITLE,
-      notes: await getNotes(),
-      alert: 'Note cteate complete!',
+    await addRecord(req.body.name, req.body.phone, req.body.problem)
+    res.render('record', {
+      title: APP_RECORD_TITLE,
+      success: 'Заявка создана!',
+      error: undefined,
     })
   } catch (err) {
-    console.warn('ADD operation error!')
-    res.render('index', {
-      title: APP_TITLE,
-      notes: await getNotes(),
-      alert: 'Note cteate error!',
+    console.warn('ADD operation error:', err)
+    res.render('record', {
+      title: APP_RECORD_TITLE,
+      success: undefined,
+      error: 'Ошибка создания заявки:' + err.message,
     })
   }
 })
-
-app.delete('/:id', async (req, res) => {
-  await removeNote(req.params.id)
-  console.log(req.params.id, 'removed')
-  res.render('index', {
-    title: APP_TITLE,
-    notes: await getNotes(),
-    alert: 'Note delete complete!',
+// Контроллер вывода таблицы заявок
+app.get('/records', async (req, res) => {
+  res.render('records', {
+    title: APP_RECORD_TITLE,
+    records: await getRecords(),
   })
 })
-
-app.put('/:id', async (req, res) => {
-  await changeNote(req.params.id, req.body.title, req.user.email)
-  console.log(req.params.id, 'changed')
-  res.render('index', {
-    title: APP_TITLE,
-    notes: await getNotes(),
-    alert: 'Note change complete!',
-  })
-})
+/** [/task] */
 
 mongoose
   .connect(
