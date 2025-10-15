@@ -18,3 +18,11 @@
 
 1. Install MongoDB and mongoose package
 2. Replace file storage with MongoDB
+
+## Login & Registration
+
+1. Add User model
+2. Add registration endpoint
+3. Add login endpoint with JWT token generation
+4. Protect notes endpoints with JWT token validation
+5. [Task] Record Form

@@ -19,6 +19,8 @@
     <script src="app.js" defer></script>
   </head>
   <body>
+    <%- include('./partials/guest-header') %>
+
     <div class="container">
       <% if (alert) { %>
       <div class="alert alert-success"><%= alert %></div>
@@ -46,6 +48,8 @@
             class="list-group-item d-flex align-items-center justify-content-between"
           >
             <span data-id="<%= notes[i].id %>"><%= notes[i].title %></span>
+            &nbsp;
+            <span><%= notes[i].owner %></span>
             <button
               class="btn btn-primary ms-auto me-2"
               data-bs-toggle="modal"
