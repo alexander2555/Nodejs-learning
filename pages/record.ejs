@@ -10,9 +10,12 @@
       integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
       crossorigin="anonymous"
     />
+    <script src="https://unpkg.com/imask"></script>
     <!-- <script src="app.js" defer></script> -->
   </head>
   <body>
+    <%- include('./partials/guest-header') %>
+
     <div class="container">
       <% if (error) { %>
       <div class="alert alert-danger"><%= error %></div>
@@ -20,16 +23,65 @@
       <div class="alert alert-success"><%= success %></div>
       <% } %>
 
-      <h1><%= title %></h1>
+      <h1 class="text-center"><%= title %></h1>
 
+      <% if (record) { %>
+      <table class="table table--striped-columns">
+        <caption>
+          Ожидайте звонка оператора.
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Дата</th>
+            <th scope="col">ФИО</th>
+            <th scope="col">Телефон</th>
+            <th scope="col">Проблема</th>
+          </tr>
+          <tr>
+            <td>
+              <time
+                datetime="<%= new Date(record.timestamp).toISOString().split('T')[0] %>"
+                ><%= new Date(record.timestamp).toLocaleString() %></time
+              >
+            </td>
+            <td><%= record.name %></td>
+            <td><%= record.phone %></td>
+            <td><%= record.problem %></td>
+          </tr>
+        </thead>
+      </table>
+      <% } else { %>
       <form action="/" method="post" class="p-2">
         <div class="form-group">
-          <input type="text" class="form-control" name="name" />
-          <input type="tel" class="form-control" name="phone" />
-          <textarea class="form-control" name="problem"> </textarea>
+          <input
+            type="text"
+            class="form-control mt-2"
+            name="name"
+            placeholder="ФИО"
+          />
+          <input
+            type="text"
+            class="form-control mt-2"
+            name="phone"
+            id="phone"
+            placeholder="Телефон"
+          />
+          <textarea
+            class="form-control mt-2"
+            name="problem"
+            placeholder="Опишите здесь вашу проблему"
+          ></textarea>
           <button class="btn btn-primary mt-2" type="submit">Отправить</button>
         </div>
       </form>
+      <% } %>
     </div>
+    <script>
+      const phoneInputEl = document.getElementById('phone')
+      const maskOptions = {
+        mask: '+{7}(000)000-00-00',
+      }
+      const mask = IMask(phoneInputEl, maskOptions)
+    </script>
   </body>
 </html>

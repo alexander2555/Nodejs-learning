@@ -2,6 +2,10 @@ const mongoose = require('mongoose')
 const validator = require('validator')
 
 const RecordSchema = mongoose.Schema({
+  timestamp: {
+    type: String,
+    required: true,
+  },
   name: {
     type: String,
     required: true,
@@ -9,11 +13,6 @@ const RecordSchema = mongoose.Schema({
   phone: {
     type: String,
     required: true,
-    unique: true,
-    validate: {
-      validator: validator.isMobilePhone,
-      message: 'Номер телефона некорректен!',
-    },
   },
   problem: {
     type: String,

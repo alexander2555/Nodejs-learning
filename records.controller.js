@@ -1,7 +1,7 @@
 const Record = require('./models/Record')
 
-async function addRecord(name, phone, problem) {
-  await Record.create({ name, phone, problem })
+async function addRecord(timestamp, name, phone, problem) {
+  await Record.create({ timestamp, name, phone, problem })
 }
 
 async function getRecords() {

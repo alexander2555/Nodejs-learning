@@ -14,22 +14,30 @@
   </head>
   <body>
     <div class="container">
+      <%- include('./partials/user-header') %>
+
       <h1><%= title %></h1>
 
       <% if (records.length) { %>
-      <table>
+      <table class="table table--striped-columns">
         <thead>
           <tr>
-            <th>Дата создания</th>
-            <th>ФИО</th>
-            <th>Телефон</th>
-            <th>Проблема</th>
+            <th scope="col">Дата создания</th>
+            <th scope="col">ФИО</th>
+            <th scope="col">Телефон</th>
+            <th scope="col">Проблема</th>
           </tr>
           <% for(let i=0; i < records.length; i++) { %>
           <tr>
-            <td><% records[i].name %></td>
-            <td><% records[i].phone %></td>
-            <td><% records[i].problem %></td>
+            <td>
+              <% const timestamp = new Date(Number(records[i].timestamp)) %>
+              <time datetime="<%= timestamp.toISOString().split('T')[0] %>"
+                ><%= timestamp.toLocaleString() %></time
+              >
+            </td>
+            <td><%= records[i].name %></td>
+            <td><%= records[i].phone %></td>
+            <td><%= records[i].problem %></td>
           </tr>
           <% } %>
         </thead>
