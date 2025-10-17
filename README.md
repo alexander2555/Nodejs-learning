@@ -66,3 +66,8 @@
    - Frontend: [http://localhost:5173](http://localhost:5173)
 
 > Requires [Node.js](https://nodejs.org/) and MongoDB access.
+
+6. Operator login data
+
+> test@test.te
+> qwe123
