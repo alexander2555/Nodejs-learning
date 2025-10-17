@@ -21,7 +21,7 @@ async function loginUser(email, password) {
     throw new Error('Wrong password')
   }
 
-  return jwt.sign({ email }, JWT_SECRET, { expiresIn: '30d' })
+  return jwt.sign({ email }, JWT_SECRET, { expiresIn: '30min' })
 }
 
 module.exports = { addUser, loginUser }

@@ -10,9 +10,11 @@ function auth(req, res, next) {
     req.user = {
       email: verifyResult.email,
     }
+    console.log(req.user)
 
     next()
-  } catch (e) {
+  } catch (err) {
+    console.log('Auth unsuccessfull:', err.message)
     res.redirect('/login')
   }
 }
