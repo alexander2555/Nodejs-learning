@@ -130,7 +130,7 @@ app.put('/:id', async (req, res) => {
 
 mongoose
   .connect(
-    'mongodb+srv://alexander7555_db_user:mqXni6f3FbfwYCZn@cluster0.mgwe7yy.mongodb.net/notes?retryWrites=true&w=majority&appName=Cluster0'
+    process.env.DB_CONNECTION_STRING
   )
   .then(() => {
     console.log(chalk.green(`App connected with Mongodb notes DB`))
